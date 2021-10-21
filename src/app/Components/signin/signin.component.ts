@@ -59,34 +59,39 @@ export class SigninComponent  {
 			password : String( this.password?.value ),
 			role: String( this.rol?.value )
 		} 
-
-		this._servicio.post( endpoint , payload ).then( ( response ) => {
-
-			Swal.close();		
-
-			if( response.code != 200 ){
+	
+		setTimeout(() => {
+			
+			this._servicio.post( endpoint , payload ).then( ( response ) => {
+	
+				Swal.close();		
+	
+				if( response.code != 200 ){
+					Swal.fire({
+						icon: 'error',
+						title: response.error,
+						allowOutsideClick: false,
+					});	
+	
+					return;
+				} //end if
+			
+				this.clearInputs();
+	
 				Swal.fire({
-					icon: 'error',
-					title: response.error,
+					icon: 'success',
+					title: 'Registro Exitoso',
 					allowOutsideClick: false,
-				});	
-
-				return;
-			} //end if
-		
-			this.clearInputs();
-
-			Swal.fire({
-				icon: 'success',
-				title: 'Registro Exitoso',
-				allowOutsideClick: false,
-			} ).then((result) => {
-				
-				if (result.isConfirmed) this.router.navigateByUrl('/login');
+				} ).then((result) => {
 					
+					if (result.isConfirmed) this.router.navigateByUrl('/login');
+						
+				});
+	
 			});
 
-		});
+		}, 500);
+
 
 	} //end method
 

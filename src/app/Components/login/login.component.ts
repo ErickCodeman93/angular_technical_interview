@@ -53,31 +53,33 @@ export class LoginComponent {
 			email: this.email?.value,
 			password : this.password?.value
 		} 
-
-		this._servicio.post( endpoint , payload ).then( ( response ) => {
-
-			Swal.close();
+	
+		setTimeout(() => {
+	
+			this._servicio.post( endpoint , payload ).then( ( response ) => {
+	
+				Swal.close();
+				
+				if( response.code != 200 ){
+	
+					Swal.fire({
+						icon: 'error',
+						title: response.msg,
+						allowOutsideClick: false,
+					});	
+	
+					return;
+				} //end if
 			
-			console.log( response.code );
+				// this.clearInputs();
+	
+				this._servicio.set_token( response.token );
+	
+				this.router.navigateByUrl('/home');
+	
+			});
 
-			if( response.code != 200 ){
-
-				Swal.fire({
-					icon: 'error',
-					title: response.msg,
-					allowOutsideClick: false,
-				});	
-
-				return;
-			} //end if
-		
-			// this.clearInputs();
-
-			this._servicio.set_token( response.token );
-
-			this.router.navigateByUrl('/home');
-
-		});
+		}, 500);
 
 	} //end method
 

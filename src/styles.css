@@ -3,13 +3,21 @@
 @import '~@swimlane/ngx-datatable/themes/material.css';
 @import '~@swimlane/ngx-datatable/assets/icons.css';
 
+body{
+	background-color: #5C62C5;
+}
+
+p ,small, a, label{
+	color: white;
+}
+
 .main-form{
 	height: 100vh !important;
 	display: flex;
 }
 
 .form{
-	width: 50%;
+	width: 30%;
 }
 
 .invalid-form {
@@ -35,3 +43,39 @@
 
 	width: 100%;
 }
+
+.input_serch {
+	padding:8px;
+	margin:15px auto;
+	width:30%;
+}
+
+@media only screen and ( min-width: 992px ) and ( max-width: 1199px ){
+
+}
+
+@media only screen and ( min-width: 768px ) and ( max-width: 991px ){
+
+	/* .form{
+		width: 100%;
+	} */
+}
+
+@media only screen and ( max-width: 767px ){
+
+	.form{
+		width: 60%;
+	}
+}
+
+@media only screen and ( max-width: 375px ){
+
+	.form{
+		width: 100%;
+	}
+
+	.input_serch{
+		width:100%;
+	}
+}
+

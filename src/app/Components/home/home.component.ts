@@ -28,8 +28,6 @@ export class HomeComponent {
 
 		_servicio.get( endpoint, this.token ).then( ( response ) => {
 
-			console.log( response );
-
 			if( response.code !== 200 ){
 	
 				Swal.fire( {
@@ -41,7 +39,7 @@ export class HomeComponent {
 				} ).then((result) => {
 					
 					_servicio.delete_token();
-					
+
 					if (result.isConfirmed) this.router.navigateByUrl('/login');
 						
 				});
