@@ -1,0 +1,25 @@
+<div class="center-element">
+	<div>
+		<h3 class="text-center">
+			Lista de usuarios registrados.
+		</h3>
+		<input
+			type="text"
+			style="padding:8px;margin:15px auto;width:30%;"
+			placeholder="Buscar por Correo"
+			(keyup)="updateFilter($event)"
+		/>
+		<ngx-datatable
+		#table
+		class="material"
+		[columns]="columns"
+		[columnMode]="ColumnMode.force"
+		[headerHeight]="50"
+		[footerHeight]="50"
+		rowHeight="auto"
+		[limit]="10"
+		[rows]="rows"
+		>
+		</ngx-datatable>
+	</div>
+</div>

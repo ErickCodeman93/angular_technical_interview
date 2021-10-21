@@ -1,0 +1,69 @@
+<div class="container main-form justify-content-center align-items-center">
+	
+	<div class="row form">
+		<div>
+			<h1 class="mb-5">Registro</h1>
+			<hr />
+			<form [formGroup]="sigInForm" (ngSubmit)="onSubmit()" novalidate="novalidate">
+				<div>
+					<label for="email" class="form-label">Correo:</label>
+					<input 
+						type="email" 
+						class="form-control" 
+						id="email" 
+						name="email" 
+						formControlName="email"
+						placeholder="Escribe tu correo" 
+						[ngClass]="{ 'invalid' : email && email.invalid && email.touched, 'valid' : email && email.valid && email.touched }"/>
+				</div>
+				<span
+					class="invalid-form"
+					*ngIf="email && email.invalid && email.touched">
+						<small>*Correo Incorrecto</small>
+				</span>
+				<br /><br />
+				<div>
+					<label for="password" class="form-label">Contraseña</label>
+					<input 
+						type="password" 
+						class="form-control" 
+						id="password" 
+						name="password"
+						formControlName="password" 
+						placeholder="Escribe tu contraseña" 
+						[ngClass]="{ 'invalid' : password && password.invalid && password.touched, 'valid' : password && password.valid && password.touched }"/>
+				</div>
+				<span 
+					class="invalid-form" 
+					*ngIf="password && password.invalid && password.touched">
+						<small>*Contraseña Incorrecta</small>
+				</span>
+				<br /><br />
+				<div>
+					<label for="rol" class="form-label">Rol</label>
+					<select 
+						id="rol" 
+						name="rol"
+						class="form-select form-control"
+						formControlName="rol" 
+						[ngClass]="{ 'invalid' : rol && rol.invalid && rol.touched, 'valid' : rol && rol.valid && rol.touched }">
+					>
+							<option value="">Elige una opción</option>
+							<option value="1">Administrador</option>
+							<option value="2">Usuario</option>
+					</select>
+				</div>
+				<span 
+					class="invalid-form" 
+					*ngIf="rol && rol.invalid && rol.touched">
+						<small>*Rol Incorrecto</small>
+				</span>
+				<br />
+				<br/>
+				<div class="text-center">
+					<button type="submit" class="btn btn-primary">Registrarse</button>
+				</div>
+			  </form>
+		</div>
+	</div>
+</div>
