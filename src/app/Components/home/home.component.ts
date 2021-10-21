@@ -2,6 +2,7 @@ import { Component, ViewChild  } from '@angular/core';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { HelperService } from 'src/app/service/helper.service';
 
 @Component({
 	selector: 'app-home',
@@ -10,77 +11,55 @@ import Swal from 'sweetalert2';
 })
 export class HomeComponent {
 	
-	type_user:string;
-
+	token:any;
 	data:any = [];
 	rows:any = [];
 	temp:any = [];
-	columns = [{ prop: 'ID' }, { name: 'email' }, { name: 'rol' }];
+	columns = [{ prop: 'ID' }, { name: 'email' }, { name: 'role' }];
 	@ViewChild(DatatableComponent) table! : DatatableComponent;
 
 	ColumnMode = ColumnMode;
 
-	constructor( private router: Router ) {
-		// this.fetch( (data:any) => {
-
-		// 	// console.log( data );
-			
-		// 	// cache our list
-		// 	this.temp = [...data];
-
-		// 	// push our inital complete list
-		// 	this.rows = data;
-		// 	console.log( this.rows );
-			
-		// });
-			
-		this.type_user = 'admin';
-
-		if( this.type_user == 'user' ){
-	
-			Swal.fire( {
-				confirmButtonText: "Aceptar",
-				text : 'No cuentas con los privilegios necesarios.',
-				title: "Información clasificada",
-				icon : "error",
-			} ).then((result) => {
-				
-				if (result.isConfirmed) this.router.navigateByUrl('/login');
-					
-			});
-
-			return;
-			
-		} //end if
-
-		this.data = [
-				{
-					ID:1,
-					email:"erick@gmail.com",
-					rol: "Administrador"
-				},
-				{
-					ID:2,
-					email:"alberto@gmail.com",
-					rol: "Usuario"
-				},
-		];
+	constructor( private router: Router, private _servicio:HelperService ) {
 		
-		this.temp = [...this.data];
-		this.rows = [...this.data];
+		this.token = _servicio.get_token();
+
+		const endpoint = 'http://localhost:8080/api/users';
+
+		_servicio.get( endpoint, this.token ).then( ( response ) => {
+
+			console.log( response );
+
+			if( response.code !== 200 ){
+	
+				Swal.fire( {
+					confirmButtonText: "Aceptar",
+					text : 'No cuentas con los privilegios necesarios.',
+					title: "Información clasificada",
+					icon : "error",
+					allowOutsideClick: false,
+				} ).then((result) => {
+					
+					_servicio.delete_token();
+					
+					if (result.isConfirmed) this.router.navigateByUrl('/login');
+						
+				});
+	
+				return;
+				
+			} //end if
+
+
+			this.data = response.users;
+			
+			this.temp = [...this.data];
+			this.rows = [...this.data];
+			
+		}); //end request
+
 
 	}
-
-	// fetch( cb:any ) {
-	// 	const req = new XMLHttpRequest();
-	// 	req.open('GET', `https://swimlane.github.io/ngx-datatable/assets/data/company.json`);
-
-	// 	req.onload = () => {
-	// 		cb(JSON.parse(req.response));
-	// 	};
-
-	// 	req.send();
-	// }
 
 	updateFilter( event:any ) {
 		const val = event.target.value.toLowerCase();

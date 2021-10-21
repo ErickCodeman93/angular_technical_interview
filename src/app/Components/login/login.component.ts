@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HelperService } from 'src/app/service/helper.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -9,6 +11,10 @@ import Swal from 'sweetalert2';
 })
 
 export class LoginComponent {
+
+	constructor( private _servicio:HelperService, private router: Router ){
+
+	} //end constructor
 
 	loginForm = new FormGroup({
 		email: new FormControl('', [ Validators.required,Validators.email ] ),
@@ -41,11 +47,49 @@ export class LoginComponent {
 		});
 		Swal.showLoading();
 		
+		const endpoint = 'http://localhost:8080/api/auth/login';
 		
 		let payload = {
 			email: this.email?.value,
 			password : this.password?.value
 		} 
+
+		this._servicio.post( endpoint , payload ).then( ( response ) => {
+
+			Swal.close();
+			
+			console.log( response.code );
+
+			if( response.code != 200 ){
+
+				Swal.fire({
+					icon: 'error',
+					title: response.msg,
+					allowOutsideClick: false,
+				});	
+
+				return;
+			} //end if
+		
+			// this.clearInputs();
+
+			this._servicio.set_token( response.token );
+
+			this.router.navigateByUrl('/home');
+
+		});
+
+	} //end method
+
+	clearInputs(){
+		
+		this.loginForm.setValue({
+			email: '',
+			password :	'',
+		});
+
+		this.email?.markAsUntouched();
+		this.password?.markAsUntouched();
 
 	} //end method
 

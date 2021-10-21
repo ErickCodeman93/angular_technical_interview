@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HelperService } from 'src/app/service/helper.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -9,10 +11,14 @@ import Swal from 'sweetalert2';
 })
 export class SigninComponent  {
 
+	constructor( private _servicio:HelperService, private router: Router ){
+
+	} //end constructor
+
 	sigInForm = new FormGroup({
-		email: 			new FormControl('', [ Validators.required,Validators.email ] ),
+		email: 		new FormControl('', [ Validators.required,Validators.email ] ),
 		password :	new FormControl('', [ Validators.required ] ),
-		rol: 				new FormControl('', [ Validators.required ] )
+		rol: 		new FormControl('', [ Validators.required ] )
 	});
 	
 	get email(){
@@ -46,12 +52,55 @@ export class SigninComponent  {
 		});
 		Swal.showLoading();
 		
-		
+		const endpoint = 'http://localhost:8080/api/auth/signIn';
+
 		let payload = {
-			email: this.email?.value,
-			password : this.password?.value,
-			rol: this.rol?.value
+			email: String( this.email?.value ),
+			password : String( this.password?.value ),
+			role: String( this.rol?.value )
 		} 
+
+		this._servicio.post( endpoint , payload ).then( ( response ) => {
+
+			Swal.close();		
+
+			if( response.code != 200 ){
+				Swal.fire({
+					icon: 'error',
+					title: response.error,
+					allowOutsideClick: false,
+				});	
+
+				return;
+			} //end if
+		
+			this.clearInputs();
+
+			Swal.fire({
+				icon: 'success',
+				title: 'Registro Exitoso',
+				allowOutsideClick: false,
+			} ).then((result) => {
+				
+				if (result.isConfirmed) this.router.navigateByUrl('/login');
+					
+			});
+
+		});
+
+	} //end method
+
+	clearInputs(){
+		
+		this.sigInForm.setValue({
+			email: '',
+			password :	'',
+			rol: ''
+		});
+
+		this.email?.markAsUntouched();
+		this.password?.markAsUntouched();
+		this.rol?.markAsUntouched();
 
 	} //end method
 

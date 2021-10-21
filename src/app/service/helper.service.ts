@@ -24,9 +24,71 @@ export class HelperService {
 		}
 	};
 
-  getValidation(){
-    return this.validation;
-  }
+	getValidation(){
+		return this.validation;
+	}
+
+	async post ( endpoint:string, payload:any ){
+
+		const config = {
+			method : 'POST',
+			headers: { 'Content-Type' : 'application/json' },
+			body: JSON.stringify( payload )
+		}
+	
+		const request = await fetch( endpoint, config );
+	
+		const data = await request.json();
+				
+		return data;
+	} //end function
+
+	async get ( endpoint:string, token:string ){
+
+		const config = {
+			method : 'GET',
+			headers: { 
+				'Content-Type' : 'application/json' ,
+				'x-token' :  token,
+			},
+			
+		}
+	
+		const request = await fetch( endpoint, config );
+	
+		const data = await request.json();
+				
+		return data;
+	} //end function
+	
+
+  	get_token(){
+		
+		return localStorage.getItem( 'token' );
+	}
+
+	set_token( token:string ){
+	  
+		localStorage.setItem( 'token', token || '' );
+	}
+
+	delete_token(){
+		localStorage.removeItem('token');
+	}
+
+	check ( status:any ) {
+
+		const codes = [
+			200,
+			201
+		]
+	
+		if( ! codes.includes( status ) )
+			return false
+	
+		return true;
+	
+	} //end function
 
 
-}
+} //end class
